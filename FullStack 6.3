@@ -1,0 +1,69 @@
+
+let users = [
+  { accountNumber: 1001, name: "Aarav", balance: 8000 },
+  { accountNumber: 1002, name: "Simran", balance: 5000 },
+  { accountNumber: 1003, name: "Rohan", balance: 12000 },
+];
+
+// Function to find a user by account number
+function findUser(accountNumber) {
+  return users.find((u) => u.accountNumber === accountNumber);
+}
+
+// Function to perform a money transfer
+function transferMoney(senderAcc, receiverAcc, amount) {
+  console.log(`\nInitiating transfer of ₹${amount} from ${senderAcc} → ${receiverAcc}`);
+
+  // Step 1: Validate both accounts
+  const sender = findUser(senderAcc);
+  const receiver = findUser(receiverAcc);
+
+  if (!sender) {
+    console.log("❌ Transfer failed: Sender account not found!");
+    return;
+  }
+
+  if (!receiver) {
+    console.log("❌ Transfer failed: Receiver account not found!");
+    return;
+  }
+
+  // Step 2: Check balance
+  if (sender.balance < amount) {
+    console.log(`🚫 Transfer failed: Insufficient balance in ${sender.name}'s account.`);
+    return;
+  }
+
+  // Step 3: Perform updates (Sequential & Safe)
+  sender.balance -= amount;
+  receiver.balance += amount;
+
+  // Step 4: Show success message
+  console.log(`✅ Transfer Successful! ₹${amount} transferred from ${sender.name} to ${receiver.name}`);
+  console.log(`💰 ${sender.name}'s New Balance: ₹${sender.balance}`);
+  console.log(`💰 ${receiver.name}'s New Balance: ₹${receiver.balance}`);
+}
+
+// Function to display all accounts
+function showAccounts() {
+  console.log("\n===== 🏦 Account Summary =====");
+  users.forEach((u) => {
+    console.log(`${u.accountNumber} | ${u.name} | Balance: ₹${u.balance}`);
+  });
+  console.log("==============================\n");
+}
+
+// ------------------------------------------------------------
+// SIMULATION TESTS
+// ------------------------------------------------------------
+console.log("===========================================");
+console.log(" ACCOUNT TRANSFER SYSTEM (SIMULATION DEMO) ");
+console.log("===========================================");
+
+showAccounts();
+transferMoney(1001, 1002, 2000); // ✅ Successful transfer
+transferMoney(1002, 1003, 6000); // 🚫 Insufficient balance
+transferMoney(1003, 9999, 1000); // ❌ Receiver not found
+transferMoney(1234, 1001, 1000); // ❌ Sender not found
+
+showAccounts();
